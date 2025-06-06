@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&family= Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+/* Example usage */
+body {
+    font-family: 'Nunito', Arial, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Alegreya', serif;
+}
+
+.header-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1rem 1rem 1rem;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.header-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #343a40;
+    margin: 0;
+}
