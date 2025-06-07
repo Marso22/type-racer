@@ -1,79 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <title>TypeRacer</title>
 </head>
-
 <body>
-    <header class="header-area">
-        <span class="header-title">TypeRacer</span>
-        <button type="button" class="btn btn-outline-primary" id="instructionsBtn">
-            Instructions
-        </button>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center my-4">
+                    <h1>TypeRacer</h1>
+                    <button class="btn btn-light mt-3" id="instructions-btn">
+                        <i class="fas fa-info-circle"></i> Instructions
+                    </button>
+                </div>
+            </div>
+        </div>
     </header>
-    <div class="container my-5">
-        <div class="row">
-            <div class="col-12 col-md-8 col-lg-8 mb-4 mb-md-0"><!-- Left column: 2/3 width on md+ -->
-                <!-- Left column content goes here -->
-                <div class="mb-3">
-                    <label for="difficultySelect" class="form-label">Select Difficulty</label>
-                    <div class="input-group">
-                        <select class="form-select" id="difficultySelect">
+
+    <main>
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="difficulty">Select Difficulty</label>
+                        <select class="form-select" id="difficulty">
                             <option value="easy">Easy</option>
                             <option value="medium">Medium</option>
                             <option value="hard">Hard</option>
                         </select>
                     </div>
-                </div>
-                <!-- Sample text for typing -->
-                <div class="mb-3">
-                    <label class="form-label">Sample Text</label>
-                    <div class="border rounded p-3 bg-light" id="sampleText">
-                        The quick brown fox jumps over the lazy dog.
+                    <div class="test-area">
+                        <p class="lead">Test your typing speed by typing the text shown below:</p>
+                        <div class="mb-3 p-3 border" id="sample-text">
+                            The cat sat on the mat.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label visually-hidden" for="user-input">Type Here</label>
+                        <textarea class="form-control" id="user-input" rows="6" placeholder="Click the start button to begin the test"></textarea>
+                    </div>
+                    <div class="mb-3 text-center">
+                        <button class="btn btn-lg btn-outline-orange" id="start-btn">Start</button>
+                        <button class="btn btn-lg btn-outline-orange" id="stop-btn">Stop</button>
+                        <button class="btn btn-lg btn-outline-orange" id="retry-btn">Retry</button>
                     </div>
                 </div>
-                <!-- Text box for user input -->
-                <div class="mb-3">
-                    <label for="typingInput" class="form-label">Type here:</label>
-                    <textarea class="form-control" id="typingInput" rows="3"
-                        placeholder="Start typing here..."></textarea>
-                </div>
-                <!-- Control buttons -->
-                <div class="mb-3 d-flex gap-2">
-                    <button type="button" class="btn btn-success" id="startTestBtn">Start</button>
-                    <button type="button" class="btn btn-danger" id="stopTestBtn">Stop</button>
-                    <button type="button" class="btn btn-secondary" id="retryTestBtn">Retry</button>
-                </div>
-            </div>
-            <div class="col-12 col-md-4 col-lg-4"><!-- Right column: 1/3 width on md+ -->
-                <!-- Right column content goes here -->
-                <div class="card">
-                    <div class="card-header">
-                        Results
-                    </div>
-                    <div class="card-body">
-                        <p>
-                            <strong>Level:</strong>
-                            <span id="resultLevel">-</span>
-                        </p>
-                        <p>
-                            <strong>Time:</strong>
-                            <span id="resultTime">-</span>
-                        </p>
-                        <p>
-                            <strong>WPM:</strong>
-                            <span id="resultWpm">-</span>
-                        </p>
+                <div class="col-md-4">
+                    <div id="results-area" class="text-center">
+                        <h2>Results</h2>
+                        <div>
+                            <p>Level: <span id="level">Easy</span></p>
+                            
+                        </div>
+                        <div>
+                            <p>Time: <span id="time">0</span>s</p>
+                        </div>
+                        <div>
+                            <p>WPM: <span id="wpm">0</span></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
+    <!-- Add your own kit code to enable Font Aweseme -->
+    <script src="https://kit.fontawesome.com/YOUR-KIT-CODE-HERE.js" crossorigin="anonymous"></script>
 
+</body>
 </html>
