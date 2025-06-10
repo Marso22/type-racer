@@ -37,8 +37,11 @@
                     </div>
                     <div class="test-area">
                         <p class="lead">Test your typing speed by typing the text shown below:</p>
-                        <div class="mb-3 p-3 border" id="sample-text">
-                            <!-- sample text is inserted here using JS -->
+                        <div class="mb-3 p-3 border position-relative" id="sample-text-wrapper">
+                            <div id="sample-text"><!-- sample text is inserted here using JS --></div>
+                            <div id="highlighted-text"
+                                style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
@@ -62,7 +65,7 @@
                         <div>
                             <p>Time: <span id="time">0.00</span>s</p>
                         </div>
-                        <div>                       
+                        <div>
                             <p>WPM: <span id="wpm">0</span></p>
                         </div>
                     </div>

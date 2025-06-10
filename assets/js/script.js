@@ -29,6 +29,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const wpmSpan = document.getElementById('wpm');
     const levelSpan = document.getElementById('level');
 
+    
+    // Highlight overlay div for real-time feedback
+let highlightDiv = document.getElementById('highlighted-text');
+if (!highlightDiv) {
+    highlightDiv = document.createElement('div');
+    highlightDiv.id = 'highlighted-text';
+    highlightDiv.className = 'mb-3 p-3 border';
+    highlightDiv.style.position = 'absolute';
+    highlightDiv.style.pointerEvents = 'none';
+    highlightDiv.style.width = '100%';
+    highlightDiv.style.height = '100%';
+    highlightDiv.style.top = '0';
+    highlightDiv.style.left = '0';
+    highlightDiv.style.whiteSpace = 'pre-wrap';
+    highlightDiv.style.zIndex = '2';
+    sampleTextDiv.style.position = 'relative';
+    sampleTextDiv.parentNode.insertBefore(highlightDiv, sampleTextDiv.nextSibling);
+}
+
     // Timer variables
     let startTime = null;
     let endTime = null;
@@ -70,6 +89,25 @@ document.addEventListener('DOMContentLoaded', function () {
         return correctCount;
     }
 
+function highlightUserInput() {
+    const sampleText = sampleTextDiv.textContent;
+    const userText = userInput.value;
+    const sampleWords = sampleText.split(/\s+/);
+    const userWords = userText.split(/\s+/);
+
+    let highlighted = '';
+    for (let i = 0; i < sampleWords.length; i++) {
+        if (userWords[i] === undefined) {
+            highlighted += `<span>${sampleWords[i]}</span>`;
+        } else if (userWords[i] === sampleWords[i]) {
+            highlighted += `<span style="color: #0d6efd; font-weight: bold;">${sampleWords[i]}</span>`;
+        } else {
+            highlighted += `<span style="color: #dc3545; font-weight: bold;">${sampleWords[i]}</span>`;
+        }
+        if (i < sampleWords.length - 1) highlighted += ' ';
+    }
+    highlightDiv.innerHTML = highlighted;
+}
     // Calculate WPM
     function calculateWPM(correctWords, elapsedSeconds) {
         if (elapsedSeconds === 0) return 0;
@@ -132,8 +170,11 @@ document.addEventListener('DOMContentLoaded', function () {
     startBtn.addEventListener('click', startTest);
     stopBtn.addEventListener('click', stopTest);
     retryBtn.addEventListener('click', resetTest);
+    userInput.addEventListener('input', highlightUserInput);
 
     // Initialize with a random text from the default difficulty level
     updateSampleText();
+    highlightUserInput();
     resetTest();
+    highlightUserInput();
 });
