@@ -77,6 +77,39 @@
     <!-- Add your own kit code to enable Font Awesome -->
     <script src="https://kit.fontawesome.com/YOUR-KIT-CODE-HERE.js" crossorigin="anonymous"></script>
     <script src="assets/js/script.js"></script>
+    <!-- Instructions Modal -->
+    <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="instructionsModalLabel">How to Use TypeRacer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ol>
+                        <li>Select your desired difficulty level from the dropdown menu.</li>
+                        <li>A sample sentence will appear. Start typing in the text box to begin the test.</li>
+                        <li>Correctly typed words will be highlighted in blue, incorrect in red.</li>
+                        <li>The timer starts automatically when you begin typing.</li>
+                        <li>Press <strong>Enter</strong> to finish the test and see your results.</li>
+                        <li>Click "Retry" to try a new sentence of the same difficulty.</li>
+                    </ol>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show modal when Instructions button is clicked
+        document.getElementById('instructions-btn').addEventListener('click', function () {
+            var modal = new bootstrap.Modal(document.getElementById('instructionsModal'));
+            modal.show();
+        });
+    </script>
 </body>
 
 </html>
