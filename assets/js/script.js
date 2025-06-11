@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
         timerRunning = true;
         timeSpan.textContent = '0.00';
         wpmSpan.textContent = '0';
+        retryBtn.disabled = true;
     }
 
     // Stop test
@@ -149,9 +150,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Update results
         updateResultsArea(wpm, difficultySelect.value);
+
+        // Enable retry button
+        retryBtn.disabled = false;
     }
 
-    // Reset test
+    // Retry functionality: new sample, clear input, reset results, disable retry
+    function handleRetry() {
+        // Load new sample text of the same difficulty
+        let selectedDifficulty = difficultySelect.value;
+        let selectedText;
+        if (selectedDifficulty === 'easy') {
+            selectedText = getRandomText(easyTexts);
+        } else if (selectedDifficulty === 'medium') {
+            selectedText = getRandomText(mediumTexts);
+        } else if (selectedDifficulty === 'hard') {
+            selectedText = getRandomText(hardTexts);
+        }
+        sampleTextDiv.textContent = selectedText;
+
+        // Clear and enable user input
+        userInput.value = '';
+        userInput.disabled = false;
+        userInput.focus();
+
+        // Reset Results area
+        timeSpan.textContent = '0.00';
+        wpmSpan.textContent = '0';
+        levelSpan.textContent = selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1);
+
+        // Reset timer state
+        timerRunning = false;
+        startTime = null;
+        endTime = null;
+
+        // Highlight reset
+        highlightUserInput();
+
+        // Disable retry button
+        retryBtn.disabled = true;
+
+        // Re-attach first input listener
+        userInput.removeEventListener('input', handleFirstInput);
+        userInput.addEventListener('input', handleFirstInput, { once: true });
+    }
+
+    // Reset test (used for difficulty change and initial load)
     function resetTest() {
         userInput.value = '';
         userInput.disabled = false;
@@ -161,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
         startTime = null;
         endTime = null;
         highlightUserInput();
+        retryBtn.disabled = true;
 
         // Remove previous input event (if any) and add a new one for first input
         userInput.removeEventListener('input', handleFirstInput);
@@ -188,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
         resetTest();
     });
     userInput.addEventListener('keydown', handleEnterKey);
-    retryBtn.addEventListener('click', resetTest);
+    retryBtn.addEventListener('click', handleRetry);
     userInput.addEventListener('input', highlightUserInput);
 
     // Hide start and stop buttons
