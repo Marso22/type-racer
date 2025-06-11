@@ -29,24 +29,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const wpmSpan = document.getElementById('wpm');
     const levelSpan = document.getElementById('level');
 
-    
     // Highlight overlay div for real-time feedback
-let highlightDiv = document.getElementById('highlighted-text');
-if (!highlightDiv) {
-    highlightDiv = document.createElement('div');
-    highlightDiv.id = 'highlighted-text';
-    highlightDiv.className = 'mb-3 p-3 border';
-    highlightDiv.style.position = 'absolute';
-    highlightDiv.style.pointerEvents = 'none';
-    highlightDiv.style.width = '100%';
-    highlightDiv.style.height = '100%';
-    highlightDiv.style.top = '0';
-    highlightDiv.style.left = '0';
-    highlightDiv.style.whiteSpace = 'pre-wrap';
-    highlightDiv.style.zIndex = '2';
-    sampleTextDiv.style.position = 'relative';
-    sampleTextDiv.parentNode.insertBefore(highlightDiv, sampleTextDiv.nextSibling);
-}
+    let highlightDiv = document.getElementById('highlighted-text');
+    if (!highlightDiv) {
+        highlightDiv = document.createElement('div');
+        highlightDiv.id = 'highlighted-text';
+        highlightDiv.className = 'mb-3 p-3 border';
+        highlightDiv.style.position = 'absolute';
+        highlightDiv.style.pointerEvents = 'none';
+        highlightDiv.style.width = '100%';
+        highlightDiv.style.height = '100%';
+        highlightDiv.style.top = '0';
+        highlightDiv.style.left = '0';
+        highlightDiv.style.whiteSpace = 'pre-wrap';
+        highlightDiv.style.zIndex = '2';
+        sampleTextDiv.style.position = 'relative';
+        sampleTextDiv.parentNode.insertBefore(highlightDiv, sampleTextDiv.nextSibling);
+    }
 
     // Timer variables
     let startTime = null;
@@ -74,6 +73,7 @@ if (!highlightDiv) {
         // Reset test when changing difficulty
         resetTest();
         levelSpan.textContent = selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1);
+        highlightUserInput();
     }
 
     // Count correct words
@@ -89,25 +89,27 @@ if (!highlightDiv) {
         return correctCount;
     }
 
-function highlightUserInput() {
-    const sampleText = sampleTextDiv.textContent;
-    const userText = userInput.value;
-    const sampleWords = sampleText.split(/\s+/);
-    const userWords = userText.split(/\s+/);
+    // Highlight sample text in real time
+    function highlightUserInput() {
+        const sampleText = sampleTextDiv.textContent;
+        const userText = userInput.value;
+        const sampleWords = sampleText.split(/\s+/);
+        const userWords = userText.split(/\s+/);
 
-    let highlighted = '';
-    for (let i = 0; i < sampleWords.length; i++) {
-        if (userWords[i] === undefined) {
-            highlighted += `<span>${sampleWords[i]}</span>`;
-        } else if (userWords[i] === sampleWords[i]) {
-            highlighted += `<span style="color: #0d6efd; font-weight: bold;">${sampleWords[i]}</span>`;
-        } else {
-            highlighted += `<span style="color: #dc3545; font-weight: bold;">${sampleWords[i]}</span>`;
+        let highlighted = '';
+        for (let i = 0; i < sampleWords.length; i++) {
+            if (userWords[i] === undefined || userWords[i] === "") {
+                highlighted += `<span>${sampleWords[i]}</span>`;
+            } else if (userWords[i] === sampleWords[i]) {
+                highlighted += `<span style="color: #0d6efd; font-weight: bold;">${sampleWords[i]}</span>`;
+            } else {
+                highlighted += `<span style="color: #dc3545; font-weight: bold;">${sampleWords[i]}</span>`;
+            }
+            if (i < sampleWords.length - 1) highlighted += ' ';
         }
-        if (i < sampleWords.length - 1) highlighted += ' ';
+        highlightDiv.innerHTML = highlighted;
     }
-    highlightDiv.innerHTML = highlighted;
-}
+
     // Calculate WPM
     function calculateWPM(correctWords, elapsedSeconds) {
         if (elapsedSeconds === 0) return 0;
@@ -120,11 +122,8 @@ function highlightUserInput() {
         levelSpan.textContent = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
     }
 
-    // Start test
+    // Start test: don't clear input, just start timer
     function startTest() {
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        userInput.value = '';
         userInput.disabled = false;
         userInput.focus();
         startTime = performance.now();
@@ -138,8 +137,6 @@ function highlightUserInput() {
         if (!timerRunning) return;
         endTime = performance.now();
         timerRunning = false;
-        stopBtn.disabled = true;
-        startBtn.disabled = false;
         userInput.disabled = true;
         const elapsedSeconds = ((endTime - startTime) / 1000);
         timeSpan.textContent = elapsedSeconds.toFixed(2);
@@ -156,21 +153,47 @@ function highlightUserInput() {
 
     // Reset test
     function resetTest() {
-        startBtn.disabled = false;
-        stopBtn.disabled = true;
         userInput.value = '';
-        userInput.disabled = true;
+        userInput.disabled = false;
         timeSpan.textContent = '0.00';
         wpmSpan.textContent = '0';
         timerRunning = false;
+        startTime = null;
+        endTime = null;
+        highlightUserInput();
+
+        // Remove previous input event (if any) and add a new one for first input
+        userInput.removeEventListener('input', handleFirstInput);
+        userInput.addEventListener('input', handleFirstInput, { once: true });
+    }
+
+    // Start test on first input
+    function handleFirstInput() {
+        if (!timerRunning) {
+            startTest();
+        }
+    }
+
+    // Stop test on Enter key
+    function handleEnterKey(e) {
+        if (timerRunning && e.key === 'Enter') {
+            e.preventDefault(); // Prevent newline in textarea
+            stopTest();
+        }
     }
 
     // Event listeners
-    difficultySelect.addEventListener('change', updateSampleText);
-    startBtn.addEventListener('click', startTest);
-    stopBtn.addEventListener('click', stopTest);
+    difficultySelect.addEventListener('change', function () {
+        updateSampleText();
+        resetTest();
+    });
+    userInput.addEventListener('keydown', handleEnterKey);
     retryBtn.addEventListener('click', resetTest);
     userInput.addEventListener('input', highlightUserInput);
+
+    // Hide start and stop buttons
+    startBtn.style.display = 'none';
+    stopBtn.style.display = 'none';
 
     // Initialize with a random text from the default difficulty level
     updateSampleText();
